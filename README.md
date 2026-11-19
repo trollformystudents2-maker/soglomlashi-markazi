@@ -57,5 +57,41 @@ Dastur avtomatik ravishda brauzeringizda ochiladi:
 ---
 
 ## 🛠 Texnologiyalar
-* **Backend:** Python 3.13, FastAPI, SQLite3 (baza alohida o'rnatishni talab qilmaydi).
+* **Backend:** Python 3.13 / 3.11, FastAPI, SQLite3 (baza alohida o'rnatishni talab qilmaydi).
 * **Frontend:** Tailwind CSS, FontAwesome 6, Chart.js, Vanilla JavaScript (hech qanday Node.js talab qilinmaydi).
+
+---
+
+## 🚂 Railway Hostingga Yuklash Qo'llanmasi
+
+Loyiha Railway platformasida 100% ishlashi uchun barcha kerakli konfiguratsiya fayllari (`requirements.txt`, `Procfile`, `railway.json`, `nixpacks.toml`, `Dockerfile`) tayyorlandi.
+
+### 1-qadam: O'zgarishlarni GitHub-ga yuborish (Push)
+Terminalda:
+```bash
+git add .
+git commit -m "Configure project for Railway deployment"
+git push origin main
+```
+
+### 2-qadam: Railway-da loyihani ishga tushirish
+1. [Railway.app](https://railway.app) ga kiring va GitHub akkauntingiz orqali ro'yxatdan o'ting / kiring.
+2. **Dashboard**dan **"New Project"** tugmasini bosing.
+3. **"Deploy from GitHub repo"** ni tanlang va `soglomlashi-markazi` repozitoriyasini tanlang.
+4. Railway avtomatik tarzda `railway.json` va `requirements.txt` ni aniqlab, loyihani qurishni (build) boshlaydi.
+
+### 3-qadam: Domen (Havola) yaratish
+1. Railway loyihangiz paneli ochilgach, xizmat (Service) ustiga bosing.
+2. **Settings** bo'limiga o'ting.
+3. **Networking** qismidagi **"Generate Domain"** tugmasini bosing.
+4. Sizga berilgan bepul havola (masalan: `https://soglomlashi-markazi-production.up.railway.app`) orqali saytga kiring.
+
+### 4-qadam (Ixtiyoriy, tavsiya etiladi): Bazani saqlab qolish (Volume)
+Har safar qayta deploy qilinganda bemorlar va hisobotlar o'chib ketmasligi uchun:
+1. Railway servisida **Volumes** bo'limiga o'ting va **Add Volume** tugmasini bosing.
+2. Mount path ga `/data` deb yozing.
+3. **Variables** bo'limiga o'tib, yangi o'zgaruvchi qo'shing:
+   * **Nomi:** `DB_PATH`
+   * **Qiymati:** `/data/shifo_nur.db`
+Shunda ma'lumotlar bazasi doimiy saqlanib qoladi.
+

@@ -7,9 +7,12 @@ import sqlite3
 import os
 from datetime import datetime, date
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "shifo_nur.db")
+DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "shifo_nur.db"))
 
 def get_connection():
+    db_dir = os.path.dirname(DB_PATH)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
@@ -141,7 +144,12 @@ def init_db():
         """, default_services)
         conn.commit()
 
+    cursor.execute("SELECT COUNT(*) FROM patients")
+    patients_count = cursor.fetchone()[0]
     conn.close()
+
+    if count == 0 and patients_count == 0:
+        seed_sample_data()
 
 def seed_sample_data():
     """Populates realistic test data for patients, today's queue, past visits, and medical records."""
